@@ -7,14 +7,13 @@ pipeline {
         
     stage('Git') {
       steps {
-        git 'https://github.com/****/****'
+        git 'https://github.com/bhimra/jenkins.git'
       }
     }
      
     stage('Build') {
       steps {
         sh 'npm install'
-         sh '<<Build Command>>'
       }
     }  
     
