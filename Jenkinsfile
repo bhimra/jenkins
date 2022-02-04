@@ -16,15 +16,15 @@ pipeline {
       steps {
         sh '''
           ssh -T centos@192.168.231.144 >> ENDSSH
-          yum install unzip -y
-          firewall-cmd --add-port={8080,3000}/tcp --permanent
-          firewall-cmd --reload
-          mkdir /home/active
-          chmod -R 775 /home/active
-          cp -r /var/lib/jenkins/workspace/nodejs2.zip /home/active/
-          chmod -R 775 /home/active/*
-          cd /home/active/
-          npm install
+          sudo yum install unzip -y
+          sudo firewall-cmd --add-port={8080,3000}/tcp --permanent
+          sudo firewall-cmd --reload
+          sudo mkdir /home/active
+          sudo chmod -R 775 /home/active
+          sudo cp -r /var/lib/jenkins/workspace/nodejs2.zip /home/active/
+          sudo chmod -R 775 /home/active/*
+          sudo cd /home/active/
+          sudo npm install
           fi
 ENDSSH
       '''
@@ -36,9 +36,9 @@ ENDSSH
             ssh -t -t centos@192.168.231.144 'bash -s << 'ENDSSH'
             if [[ -d "/home/active/*.zip" ]];
             then
-                unzip /home/active/*.zip
+                sudo unzip /home/active/*.zip
             else
-                echo "unzip failure"
+                sudo echo "unzip failure"
             fi
 ENDSSH'
             '''
@@ -51,13 +51,13 @@ ENDSSH'
           ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
           if [[ Z=$(sudo ps aux | grep -i [n]ode | awk 'NR==1' | gawk {'print $2'}) ]];
           then
-              cp -p /home/active/index.js /home/active/logs/index.js.`date +%Y.%m.%d.%H.%M.%S`
-              kill -9 $Z
+              sudo cp -p /home/active/index.js /home/active/logs/index.js.`date +%Y.%m.%d.%H.%M.%S`
+              sudo kill -9 $Z
               echo "node service stop successfully."
               echo "restarting node service"
               cd /home/active/
-              node index.js
-              ss -tnlp | grep "node"
+              sudo node index.js
+              sudo ss -tnlp | grep "node"
           else
               echo "node service failed"
           fi
