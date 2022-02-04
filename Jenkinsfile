@@ -16,11 +16,6 @@ pipeline {
       steps {
         sh '''
           ssh -T centos@192.168.231.144 >> ENDSSH
-//           sudo yum install unzip -y
-//           sudo firewall-cmd --add-port={8080,3000}/tcp --permanent
-//           sudo firewall-cmd --reload
-//           sudo mkdir /home/active
-//           sudo chmod -R 775 /home/active
           sudo chmod -R 775 /var/lib/jenkins/workspace/nodejs2.zip
           sudo cp -r /var/lib/jenkins/workspace/nodejs2/nodejs2.zip /home/centos/
           sudo mkdir /home/centos/logs
