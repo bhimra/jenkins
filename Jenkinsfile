@@ -22,6 +22,7 @@ pipeline {
         cp -r /var/lib/jenkins/workspace/nodejs2/*.zip /home/active/
         chmod -R 775 /home/active/*
         cd /home/active/
+        npm install
         fi
 ENDSSH
      '''
@@ -49,12 +50,12 @@ ENDSSH'
             cp -p /home/active/index.js /home/active/logs/index.js.`date +%Y.%m.%d.%H.%M.%S`
             kill -9 $Z
             echo "node service stop successfully."
-        else
             echo "restarting node service"
-            npm install
-            sleep 5
             cd /home/active/
             node index.js
+            ss -tnlp | grep "node"
+        else
+            echo "node service failed"
         fi
 ENDSSH'
      '''
