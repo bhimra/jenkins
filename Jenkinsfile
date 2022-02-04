@@ -28,7 +28,7 @@ ENDSSH
      '''
 }
 
-    stage ('Prepare destination host') {
+    stage ('Unzipping the files') {
       sh '''
           ssh -t -t centos@192.168.231.144 'bash -s << 'ENDSSH'
           if [[ -d "/home/active/*.zip" ]];
