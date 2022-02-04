@@ -21,7 +21,8 @@ pipeline {
 //           sudo firewall-cmd --reload
 //           sudo mkdir /home/active
 //           sudo chmod -R 775 /home/active
-          sudo cp -r /var/lib/jenkins/workspace/nodejs2.zip /home/centos/
+          sudo chmod -R 775 /var/lib/jenkins/workspace/nodejs2.zip
+          sudo cp -r /var/lib/jenkins/workspace/nodejs2/nodejs2.zip /home/centos/
           sudo mkdir /home/centos/logs
           sudo cd /home/centos/
           sudo npm install
