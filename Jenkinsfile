@@ -8,7 +8,7 @@ pipeline {
     stage('checkout + Zip file') {
       steps {
         git 'https://github.com/bhimra/jenkins.git'
-        sh 'zip -r /var/lib/jenkins/workspace/nodejs2/*.js'
+        sh 'zip -r /var/lib/jenkins/workspace/nodejs2/'
       }
     }
 
