@@ -16,6 +16,8 @@ pipeline {
       sh '''
         ssh -t -t centos@192.168.231.144 >> ENDSSH
         yum update -y
+        firewall-cmd --add-port={8080,3000}/tcp --permanent
+        firewall-cmd --reload
         mkdir /home/active
         cp -r /var/lib/jenkins/workspace/nodejs2/*.zip /home/active/
         chmod -R 775 /home/active/*
@@ -39,7 +41,7 @@ ENDSSH'
     }
 
             
-    stage ('Verify node service  host') {
+    stage ('Verify node service') {
       sh '''
         ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
         if [[ Z=$(sudo ps aux | grep -i [n]ode | awk 'NR==1' | gawk {'print $2'}) ]];
