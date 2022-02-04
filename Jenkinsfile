@@ -8,7 +8,8 @@ pipeline {
     stage('checkout + Zip file') {
       steps {
         git 'https://github.com/bhimra/jenkins.git'
-        sh 'zip -r nodejs2.zip /var/lib/jenkins/workspace/nodejs2/ '
+        sh 'zip -r nodejs2.zip /var/lib/jenkins/workspace/nodejs2/'
+        sh 'chmod -R 775 /var/lib/jenkins/workspace/nodejs2/nodejs2.zip'
       }
     }
 
@@ -16,7 +17,6 @@ pipeline {
       steps {
         sh '''
           ssh -T centos@192.168.231.144 >> ENDSSH
-          sudo chmod -R 775 /var/lib/jenkins/workspace/nodejs2.zip
           sudo cp -r /var/lib/jenkins/workspace/nodejs2/nodejs2.zip /home/centos/
           sudo mkdir /home/centos/logs
           sudo cd /home/centos/
