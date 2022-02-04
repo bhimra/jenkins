@@ -15,12 +15,12 @@ pipeline {
     stage ('Prepare destination host') {
       steps {
         sh '''
-          ssh -t -t centos@192.168.231.144 >> ENDSSH
-          yum update -y
+          ssh -T centos@192.168.231.144 >> ENDSSH
           yum install unzip -y
           firewall-cmd --add-port={8080,3000}/tcp --permanent
           firewall-cmd --reload
           mkdir /home/active
+          chmod -R 775 /home/active
           cp -r /var/lib/jenkins/workspace/nodejs2.zip /home/active/
           chmod -R 775 /home/active/*
           cd /home/active/
