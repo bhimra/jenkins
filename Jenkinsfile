@@ -13,52 +13,56 @@ pipeline {
     }
 
     stage ('Prepare destination host') {
-      sh '''
-        ssh -t -t centos@192.168.231.144 >> ENDSSH
-        yum update -y
-        firewall-cmd --add-port={8080,3000}/tcp --permanent
-        firewall-cmd --reload
-        mkdir /home/active
-        cp -r /var/lib/jenkins/workspace/nodejs2/*.zip /home/active/
-        chmod -R 775 /home/active/*
-        cd /home/active/
-        npm install
-        fi
+      steps {
+        sh '''
+          ssh -t -t centos@192.168.231.144 >> ENDSSH
+          yum update -y
+          firewall-cmd --add-port={8080,3000}/tcp --permanent
+          firewall-cmd --reload
+          mkdir /home/active
+          cp -r /var/lib/jenkins/workspace/nodejs2/*.zip /home/active/
+          chmod -R 775 /home/active/*
+          cd /home/active/
+          npm install
+          fi
 ENDSSH
-     '''
-}
-
+      '''
+    }
+  }
     stage ('Unzipping the files') {
-      sh '''
-          ssh -t -t centos@192.168.231.144 'bash -s << 'ENDSSH'
-          if [[ -d "/home/active/*.zip" ]];
+      steps {
+        sh '''
+            ssh -t -t centos@192.168.231.144 'bash -s << 'ENDSSH'
+            if [[ -d "/home/active/*.zip" ]];
+            then
+                unzip /home/active/*.zip
+            else
+                echo "unzip failure"
+            fi
+ENDSSH'
+            '''
+          }
+        } 
+            
+    stage ('Verify node service') {
+      steps {
+        sh '''
+          ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
+          if [[ Z=$(sudo ps aux | grep -i [n]ode | awk 'NR==1' | gawk {'print $2'}) ]];
           then
-              unzip /home/active/*.zip
+              cp -p /home/active/index.js /home/active/logs/index.js.`date +%Y.%m.%d.%H.%M.%S`
+              kill -9 $Z
+              echo "node service stop successfully."
+              echo "restarting node service"
+              cd /home/active/
+              node index.js
+              ss -tnlp | grep "node"
           else
-              echo "unzip failure"
+              echo "node service failed"
           fi
 ENDSSH'
         '''
-    }
-
-            
-    stage ('Verify node service') {
-      sh '''
-        ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
-        if [[ Z=$(sudo ps aux | grep -i [n]ode | awk 'NR==1' | gawk {'print $2'}) ]];
-        then
-            cp -p /home/active/index.js /home/active/logs/index.js.`date +%Y.%m.%d.%H.%M.%S`
-            kill -9 $Z
-            echo "node service stop successfully."
-            echo "restarting node service"
-            cd /home/active/
-            node index.js
-            ss -tnlp | grep "node"
-        else
-            echo "node service failed"
-        fi
-ENDSSH'
-     '''
-    }
+      }
+    }  
   }
 }
