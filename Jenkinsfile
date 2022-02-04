@@ -21,7 +21,6 @@ pipeline {
           sudo mkdir /home/centos/logs
           sudo cd /home/centos/
           sudo npm install
-          fi
 ENDSSH
       '''
     }
