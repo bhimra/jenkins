@@ -8,7 +8,7 @@ pipeline {
     stage('checkout + Zip file') {
       steps {
         git 'https://github.com/bhimra/jenkins.git'
-        sh 'zip -r /var/lib/jenkins/workspace/nodejs2/'
+        sh 'zip /var/lib/jenkins/workspace/nodejs2'
       }
     }
 
@@ -17,10 +17,11 @@ pipeline {
         sh '''
           ssh -t -t centos@192.168.231.144 >> ENDSSH
           yum update -y
+          yum install unzip -y
           firewall-cmd --add-port={8080,3000}/tcp --permanent
           firewall-cmd --reload
           mkdir /home/active
-          cp -r /var/lib/jenkins/workspace/nodejs2/*.zip /home/active/
+          cp -r /var/lib/jenkins/workspace/nodejs2.zip /home/active/
           chmod -R 775 /home/active/*
           cd /home/active/
           npm install
