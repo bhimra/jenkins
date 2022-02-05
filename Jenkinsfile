@@ -10,55 +10,73 @@ pipeline {
         git 'https://github.com/bhimra/jenkins.git'
         sh 'zip -r nodejs2.zip /var/lib/jenkins/workspace/nodejs2/'
         sh 'chmod -R 775 /var/lib/jenkins/workspace/nodejs2/nodejs2.zip'
+        sh 'scp /var/lib/jenkins/workspace/nodejs2/nodejs2.zip centos@192.168.231.144:/home/centos/'
       }
     }
+  
+    stage ('Verify node service') {
+        steps {
+          sh '''
+            ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
+            if [[ Z=$(sudo ps aux | grep -i [n]ode | awk 'NR==1' | gawk {'print $2'}) ]];
+            then
+                sudo kill -9 $Z
+                echo "node service stop successfully."
+            else
+                echo "node service failed"
+            fi
+ENDSSH'
+        '''
+      }
+    }
+    stage ('Unzipping the files') {
+        steps {
+          sh '''
+              ssh -t -t centos@192.168.231.144 'bash -s << 'ENDSSH'
+              if [[ -d "/home/centos/NodeApp" ]];
+              then
+                  sudo mv /home/centos/NodeApp /home/centos/NodeApp.`date +%Y.%m.%d.%H.%M.%S`
+                  sudo chmod -R 775 /home/centos/NodeApp
+                  sudo unzip /home/centos/nodejs2.zip -d /home/centos/NodeApp
+              else
+                  sudo echo "unzip failure"
+              fi
+ENDSSH'
+            '''
+          }
+        }
 
     stage ('Prepare destination host') {
       steps {
         sh '''
-          ssh -T centos@192.168.231.144 >> ENDSSH
-          sudo cp -r /var/lib/jenkins/workspace/nodejs2/nodejs2.zip /home/centos/
+          ssh -t -t centos@192.168.231.144 >> ENDSSH
           sudo mkdir /home/centos/logs
-          sudo cd /home/centos/
+          sudo mkdir /home/centos/NodeApp
+          sudo chmod -R 775 /home/centos/NodeApp
+          sudo cd /home/centos/NodeApp
           sudo npm install
+          fi
 ENDSSH
       '''
     }
   }
-    stage ('Unzipping the files') {
-      steps {
-        sh '''
-            ssh -t -t centos@192.168.231.144 'bash -s << 'ENDSSH'
-            if [[ -d "/home/centos/*.zip" ]];
-            then
-                sudo unzip /home/centos/*.zip
-            else
-                sudo echo "unzip failure"
-            fi
-ENDSSH'
-            '''
-          }
-        } 
-            
-    stage ('Verify node service') {
+      stage ('Start the node service') {
       steps {
         sh '''
           ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
-          if [[ Z=$(sudo ps aux | grep -i [n]ode | awk 'NR==1' | gawk {'print $2'}) ]];
-          then
-              sudo cp -p /home/centos/nodejs2/index.js /home/nodejs2/logs/index.js.`date +%Y.%m.%d.%H.%M.%S`
-              sudo kill -9 $Z
-              echo "node service stop successfully."
-              echo "restarting node service"
-              cd /home/centos/
-              sudo node index.js
-              sudo ss -tnlp | grep "node"
-          else
-              echo "node service failed"
+          cd /home/centos/NodeApp
+          sudo node index.js > /dev/null 2>&1 <&- &
+          X=$(curl -k  -o /dev/null -s -w %{http_code} https://192.168.231.144:3000)
+          if [ $X == 200 ];
+             then
+                 echo -e 'web site is running'
+              else
+                 echo -e 'web site is down' 
           fi
 ENDSSH'
         '''
       }
-    }  
+    }      
+      
   }
 }
