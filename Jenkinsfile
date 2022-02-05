@@ -29,14 +29,29 @@ ENDSSH'
         '''
       }
     }
+
+    stage ('Prepare destination host') {
+      steps {
+        sh '''
+          ssh -t -t centos@192.168.231.144 >> ENDSSH
+          sudo mkdir /home/centos/logs
+          sudo mkdir /home/centos/NodeApp
+          sudo chmod -R 775 /home/centos/NodeApp
+          sudo chmod -R 775 /home/centos/logs
+          sudo cd /home/centos/NodeApp
+          sudo npm install
+          fi
+ENDSSH
+      '''
+    }
+  }
     stage ('Unzipping the files') {
         steps {
           sh '''
               ssh -t -t centos@192.168.231.144 'bash -s << 'ENDSSH'
               if [[ -d "/home/centos/NodeApp" ]];
               then
-                  sudo mv /home/centos/NodeApp /home/centos/NodeApp.`date +%Y.%m.%d.%H.%M.%S`
-                  sudo chmod -R 775 /home/centos/NodeApp
+                  sudo mv /home/centos/NodeApp /home/centos/logs.`date +%Y.%m.%d.%H.%M.%S`
                   sudo unzip /home/centos/nodejs2.zip -d /home/centos/NodeApp
               else
                   sudo echo "unzip failure"
@@ -46,27 +61,13 @@ ENDSSH'
           }
         }
 
-    stage ('Prepare destination host') {
-      steps {
-        sh '''
-          ssh -t -t centos@192.168.231.144 >> ENDSSH
-          sudo mkdir /home/centos/logs
-          sudo mkdir /home/centos/NodeApp
-          sudo chmod -R 775 /home/centos/NodeApp
-          sudo cd /home/centos/NodeApp
-          sudo npm install
-          fi
-ENDSSH
-      '''
-    }
-  }
       stage ('Start the node service') {
       steps {
         sh '''
           ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
           cd /home/centos/NodeApp
           sudo node index.js > /dev/null 2>&1 <&- &
-          X=$(curl -k  -o /dev/null -s -w %{http_code} https://192.168.231.144:3000)
+          X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
           if [ $X == 200 ];
              then
                  echo -e 'web site is running'
@@ -76,7 +77,6 @@ ENDSSH
 ENDSSH'
         '''
       }
-    }      
-      
+    }          
   }
 }
