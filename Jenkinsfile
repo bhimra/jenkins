@@ -14,22 +14,6 @@ pipeline {
       }
     }
   
-    stage ('Verify node service') {
-        steps {
-          sh '''
-            ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
-            if [[ Z=$(sudo ps aux | grep -i [n]ode | awk 'NR==1' | gawk {'print $2'}) ]];
-            then
-                sudo kill -9 $Z
-                echo "node service stop successfully."
-            else
-                echo "node service failed"
-            fi
-ENDSSH'
-        '''
-      }
-    }
-
     stage ('Prepare destination host') {
       steps {
         sh '''
@@ -45,6 +29,24 @@ ENDSSH
       '''
     }
   }
+
+    stage ('Verify node service') {
+      steps {
+        sh '''
+          ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
+          if [[ Z=$(sudo ps aux | grep -i [n]ode | awk 'NR==1' | gawk {'print $2'}) ]];
+          then
+              sudo kill -9 $Z
+              echo "node service stop successfully."
+              exit 0
+          else
+              echo "node service failed"
+          fi
+ENDSSH'
+      '''
+      }
+    }
+
     stage ('Unzipping the files') {
         steps {
           sh '''
