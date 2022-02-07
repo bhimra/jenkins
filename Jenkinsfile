@@ -48,26 +48,26 @@ ENDSSH'
     }
 
     stage ('Unzipping the files') {
-        steps {
-          sh '''
-              ssh -t -t centos@192.168.231.144 'bash -s << 'ENDSSH'
-              if [[ -d "/home/centos/NodeApp" ]];
-              then
-                  sudo mv /home/centos/NodeApp /home/centos/logs.`date +%Y.%m.%d.%H.%M.%S`
-                  sudo unzip /home/centos/nodejs2.zip -d /home/centos/NodeApp
-              else
-                  sudo echo "unzip failure"
-              fi
+      steps {
+        sh '''
+            ssh -t -t centos@192.168.231.144 'bash -s << 'ENDSSH'
+            if [[ -d "/home/centos/NodeApp" ]];
+            then
+                sudo mv /home/centos/NodeApp/ /home/centos/logs.`date +%Y.%m.%d.%H.%M.%S`
+                sudo unzip /home/centos/nodejs2.zip -d /home/centos/NodeApp
+            else
+                sudo echo "unzip failure"
+            fi
 ENDSSH'
             '''
           }
         }
 
-      stage ('Start the node service') {
+    stage ('Start the node service') {
       steps {
         sh '''
           ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
-          cd /home/centos/NodeApp
+          cd /home/centos/NodeApp/nodejs2
           sudo node index.js > /dev/null 2>&1 <&- &
           X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
           if [ $X == 200 ];
