@@ -23,7 +23,7 @@ pipeline {
           sudo chmod -R 775 /home/centos/NodeApp
           sudo chmod -R 775 /home/centos/logs
           sudo cd /home/centos/NodeApp
-          sudo npm install
+          npm install
           fi
 ENDSSH
       '''
