@@ -17,7 +17,7 @@ pipeline {
     stage ('Prepare destination host') {
       steps {
         sh '''
-          ssh -T centos@192.168.231.144 >> ENDSSH
+          ssh -T centos@192.168.231.144 << ENDSSH
           sudo mkdir /home/centos/logs
           sudo mkdir /home/centos/NodeApp
           sudo chmod -R 775 /home/centos/NodeApp
