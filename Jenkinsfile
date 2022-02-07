@@ -75,7 +75,7 @@ ENDSSH'
           if [[ $X -eq 200 ]];
              then
                  echo -e 'web site is running'
-              else
+             else
                  echo -e 'web site is down' 
           fi
 ENDSSH'
