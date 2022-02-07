@@ -67,7 +67,9 @@ ENDSSH'
       steps {
         sh '''
           ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
-          cd /home/centos/NodeApp/nodejs2
+          sudo chmod -R 775 /home/centos/NodeApp/var/lib/jenkins/workspace/*
+          sudo chmod -R 775 /home/centos/NodeApp/var/lib/jenkins/workspace/nodejs2/*
+          cd /home/centos/NodeApp/var/lib/jenkins/workspace/nodejs2/
           sudo node index.js > /dev/null 2>&1 <&- &
           X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
           if [ $X == 200 ];
