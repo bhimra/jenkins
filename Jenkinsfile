@@ -75,7 +75,7 @@ ENDSSH'
       }
     }
     
-    stage ('Start the node service') {
+    stage ('verify the service on port 3000 from Jenkins server') {
       steps {
         sh '''
           X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
