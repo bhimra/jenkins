@@ -9,11 +9,11 @@ pipeline {
       steps {
         git 'https://github.com/bhimra/jenkins.git'
         sh 'cd /var/lib/jenkins/workspace/'
-        sh 'cp -r /var/lib/jenkins/workspace/nodejs2@2/ /tmp/'
+        sh 'sudo cp -r /var/lib/jenkins/workspace/nodejs2@2/ /tmp/'
         sh 'cd /tmp/'
-        sh 'chown -R admin:admin /tmp/nodejs2@2/'
-        sh 'zip -r nodejs2.zip -i /tmp/nodejs2@2/'
-        sh 'scp /tmp/nodejs2.zip centos@192.168.231.144:/home/centos/'
+        sh 'sudo chown -R admin:admin /tmp/nodejs2@2/'
+        sh 'sudo zip -r nodejs2.zip -i /tmp/nodejs2@2/'
+        sh 'sudo scp /tmp/nodejs2.zip centos@192.168.231.144:/home/centos/'
       }
     }
   
