@@ -12,7 +12,7 @@ pipeline {
         sh 'cp -r /var/lib/jenkins/workspace/nodejs2@2/ /tmp/'
         sh 'cd /tmp/'
         sh 'chown -R admin:admin /tmp/nodejs2@2/'
-        sh 'zip -r nodejs2.zip -i /tmp/nodejs@2/'
+        sh 'zip -r nodejs2.zip -i /tmp/nodejs2@2/'
         sh 'scp /tmp/nodejs2.zip centos@192.168.231.144:/home/centos/'
       }
     }
