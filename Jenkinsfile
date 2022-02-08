@@ -72,12 +72,12 @@ ENDSSH'
           cd /home/centos/NodeApp/var/lib/jenkins/workspace/nodejs2/
           sudo node index.js > /dev/null 2>&1 <&- &
           X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
-           if  [ $X -eq 200 ];
-             then
-                 echo -e 'web site is running'
-             else
-                 echo -e 'web site is down' 
-          fi
+           if [ $X == 200 ];
+           then
+               echo -e 'web site is running'
+           else
+               echo -e 'web site is down'
+           fi
 ENDSSH'
         '''
       }
