@@ -71,8 +71,7 @@ ENDSSH'
       steps {
         sh '''
           ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
-          cd /home/centos/NodeApp/tmp/
-          cd nodejs2\@2/
+          cd /home/centos/NodeApp/tmp/nodejs2@2/
           sudo node index.js > /dev/null 2>&1 <&- &
 ENDSSH'
         '''
@@ -82,13 +81,8 @@ ENDSSH'
     stage ('verify the service on port 3000 from Jenkins server') {
       steps {
         sh '''
-          X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
-          if [ $X == 200 ];
-          then
-              echo -e 'web site is running'
-          else
-              echo -e 'web site is down'
-          fi
+          cd /opt/
+          ./test.sh
 ENDSSH'
         '''
       }
