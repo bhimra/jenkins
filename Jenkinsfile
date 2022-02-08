@@ -9,7 +9,7 @@ pipeline {
       steps {
         git 'https://github.com/bhimra/jenkins.git'
         sh 'cd /var/lib/jenkins/workspace/'
-        sh 'cp -r nodejs2/ /tmp/'
+        sh 'cp -r nodejs2 /tmp/'
         sh 'cd /tmp/'
         sh 'zip -r nodejs2.zip . -i nodejs2/'
         sh 'scp nodejs2.zip centos@192.168.231.144:/home/centos/'
