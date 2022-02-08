@@ -73,7 +73,7 @@ ENDSSH'
           ssh -T centos@192.168.231.144 << ENDSSH
           cd /home/centos/NodeApp/tmp/nodejs2@2/
           sudo node index.js > /dev/null 2>&1 <&- &
-ENDSSH'
+ENDSSH
         '''
       }
     }
