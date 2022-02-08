@@ -8,9 +8,9 @@ pipeline {
     stage('checkout + Zip file') {
       steps {
         git 'https://github.com/bhimra/jenkins.git'
-        sh 'zip -r nodejs2.zip /var/lib/jenkins/workspace/nodejs2/'
-        sh 'chmod -R 775 /var/lib/jenkins/workspace/nodejs2/nodejs2.zip'
-        sh 'scp /var/lib/jenkins/workspace/nodejs2/nodejs2.zip centos@192.168.231.144:/home/centos/'
+        sh 'cd /var/lib/jenkins/workspace/'
+        sh 'zip -r nodejs2.zip nodejs2/'
+        sh 'scp nodejs2/nodejs2.zip centos@192.168.231.144:/home/centos/'
       }
     }
   
@@ -55,6 +55,7 @@ ENDSSH'
             then
                 sudo mv /home/centos/NodeApp/ /home/centos/logs.`date +%Y.%m.%d.%H.%M.%S`
                 sudo unzip /home/centos/nodejs2.zip -d /home/centos/NodeApp
+                sudo chmod -R 775 /home/centos/NodeApp/*
             else
                 sudo echo "unzip failure"
             fi
@@ -67,10 +68,16 @@ ENDSSH'
       steps {
         sh '''
           ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
-          sudo chmod -R 775 /home/centos/NodeApp/var/lib/jenkins/workspace/*
-          sudo chmod -R 775 /home/centos/NodeApp/var/lib/jenkins/workspace/nodejs2/*
-          cd /home/centos/NodeApp/var/lib/jenkins/workspace/nodejs2/
+          cd /home/centos/NodeApp/nodejs2/
           sudo node index.js > /dev/null 2>&1 <&- &
+          ENDSSH'
+        '''
+      }
+    }
+    
+    stage ('Start the node service') {
+      steps {
+        sh '''
           X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
            if [ $X == 200 ];
            then
@@ -81,6 +88,6 @@ ENDSSH'
 ENDSSH'
         '''
       }
-    }          
+    }
   }
 }
