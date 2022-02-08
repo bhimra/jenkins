@@ -83,7 +83,7 @@ ENDSSH
         sh '''
           cd /opt/
           ./test.sh
-ENDSSH'
+ENDSSH
         '''
       }
     }
