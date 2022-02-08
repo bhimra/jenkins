@@ -13,7 +13,7 @@ pipeline {
         sh 'cd /tmp/'
         sh 'sudo chown -R admin:admin /tmp/nodejs2@2/'
         sh 'sudo zip -r nodejs2.zip /tmp/nodejs2@2/'
-        sh 'scp /tmp/nodejs2.zip centos@192.168.231.144:/home/centos/'
+        sh 'scp /tmp/nodejs2@2/nodejs2.zip centos@192.168.231.144:/home/centos/'
       }
     }
   
