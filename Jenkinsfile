@@ -52,17 +52,15 @@ ENDSSH'
         ssh centos@192.168.231.144 "
                     set -x
                     whoami
-                    sudo chmod -R 775 /home/centos/deployment/*
-                    cd /home/centos/deployment/
-                    pwd
-                    sudo node index.js > /dev/null 2>&1 <&- &
-                    X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
-                    if [ $X -eq 200 ];
-                        then
-                            echo -e 'web site is running'
-                        else
-                            echo -e 'web site is down' 
-                    fi " '''
+                    sudo chmod -R 775 /home/centos/deployment/
+                    sudo node /home/centos/deployment/index.js > /dev/null 2>&1 <&- & "
+        X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
+        if [ $X -eq 200 ];
+            then
+                echo -e 'web site is running'
+            else
+                echo -e 'web site is down' 
+        fi
       }
     }            
   }
