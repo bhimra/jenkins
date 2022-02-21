@@ -47,7 +47,8 @@ ENDSSH'
         sh '''
         set -x
         ssh centos@192.168.231.144 "
-                    node /home/centos/rollback/index2.js > /dev/null 2>&1 <&- & "
+                    sudo chmod -R 775 /home/centos/rollback/        
+                    sudo node /home/centos/rollback/index2.js > /dev/null 2>&1 <&- & "
         X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
         if [ $X -eq 200 ];
             then
