@@ -50,7 +50,7 @@ ENDSSH'
                     set -x
                     whoami
                     node /home/centos/rollback/index.js > /dev/null 2>&1 <&- & "
-        X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
+        X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:4000)
         if [ $X -eq 200 ];
             then
                 echo -e 'web site is running'
