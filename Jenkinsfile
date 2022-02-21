@@ -48,7 +48,9 @@ ENDSSH'
     stage ('Start the node service') {
       steps {
         sh '''
+        set -x
           ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
+          set -x
           whoami
           sudo chmod -R 775 /home/centos/deployment/*
           cd /home/centos/deployment/
