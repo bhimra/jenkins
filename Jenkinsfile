@@ -50,19 +50,19 @@ ENDSSH'
                     sudo chmod -R 775 /home/centos/rollback/        
                     sudo node /home/centos/rollback/index2.js > /dev/null 2>&1 <&- & "
         X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
-        if [ $X -eq 200 ];
+        if [ $X -eq 000 ];
             then
-                echo -e 'web site is running with version 2'
-            else
+                echo -e 'web site is not running with version 2'
                 ssh centos@192.168.231.144 "
                     sudo chmod -R 775 /home/centos/deployment/
                     sudo node /home/centos/deployment/index.js > /dev/null 2>&1 <&- & "
-        X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
-        if [ $X -eq 200 ];
+            X=$(curl -k  -o /dev/null -s -w %{http_code} http://192.168.231.144:3000)
+            if [ $X -eq 200 ];
             then
                 echo -e 'web site is running with version 1'
             else
-                echo -e 'web site is down with version 1' 
+                echo -e 'web site is down with version 1'
+            fi 
         fi '''
       }
     } 
