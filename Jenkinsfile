@@ -63,9 +63,6 @@ ENDSSH'
             else
                 echo -e 'web site is down with version 1' 
         fi 
-               
-            else
-                 echo -e 'web site is running with version 2'
         fi '''
       }
     } 
