@@ -60,7 +60,7 @@ ENDSSH'
                 echo -e 'web site is running'
             else
                 echo -e 'web site is down' 
-        fi
+        fi '''
       }
     }            
   }
