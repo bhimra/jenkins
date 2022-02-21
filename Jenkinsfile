@@ -31,6 +31,7 @@ ENDSSH
       steps {
         sh '''
           ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
+          whoami
           if [[ Z=$(sudo ps aux | grep -i [n]ode | awk 'NR==1' | gawk {'print $2'}) ]];
           then
               sudo kill -9 $Z
@@ -48,6 +49,7 @@ ENDSSH'
       steps {
         sh '''
           ssh -t -t  centos@192.168.231.144 'bash -s << 'ENDSSH'
+          whoami
           sudo chmod -R 775 /home/centos/deployment/*
           cd /home/centos/deployment/
           sudo node index.js > /dev/null 2>&1 <&- &
